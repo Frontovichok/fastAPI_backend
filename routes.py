@@ -26,6 +26,8 @@ def get_db():
 @router.post('/create')
 async def create(request:RequestBook, db:Session=Depends(get_db)):
   crud.create_book(db,book=request.parameter)
+  # Возвращает ответ, в виде ключа-значения (dict)
+  # exclude_none=True - не возвращать поля, у которых значение None, по умолчанию - False. Сделано для того, чтобы не возвращать result=Null
   return Response(code=200, status="Ok", message="Book created susccessfully").dict(exclude_none=True)
 
 @router.get("/")

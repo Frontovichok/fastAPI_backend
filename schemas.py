@@ -12,6 +12,7 @@ class BookSchema(BaseModel):
   class Config:
     orm_mode = True
 
+
 class RequestBook(BaseModel):
   parameter: BookSchema = Field(...)
 
