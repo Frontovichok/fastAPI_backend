@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from schemas import BookSchema,RequestBook,Response
 import crud
 
+
 router = APIRouter(
   prefix="/book",
   tags=["book"]
@@ -23,12 +24,13 @@ def get_db():
 #     # return Response(code=200, status="Ok", message="Success get data", result=_book).dict(exclude_none=True)
 #     return "Congratulations!"
 
+# Узнать какую функцию выполняет Depends
 @router.post('/create')
 async def create(request:RequestBook, db:Session=Depends(get_db)):
   crud.create_book(db,book=request.parameter)
   # Возвращает ответ, в виде ключа-значения (dict)
   # exclude_none=True - не возвращать поля, у которых значение None, по умолчанию - False. Сделано для того, чтобы не возвращать result=Null
-  return Response(code=200, status="Ok", message="Book created susccessfully").dict(exclude_none=True)
+  return Response(code=200, status="Ok", message="Book created successfully").dict(exclude_none=True)
 
 @router.get("/")
 async def get(db:Session=Depends(get_db)):
@@ -49,3 +51,5 @@ async def update_book(request: RequestBook, db:Session = Depends(get_db)):
 async def delete(id:int, db:Session = Depends(get_db)):
   crud.remove_book(db, book_id=id)
   return Response(code=200, status="Ok", message="Success delete data").dict(exclude_none=True)
+
+

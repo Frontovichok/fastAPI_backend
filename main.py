@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 import model
 from config import engine
 from routes import router
+from static_analysis.routes_static_analysis import router_static_analysis
+from account.routes_accounts import router_accounts
+# from routes_static_analysis import router_static_analysis
 import uvicorn
 
 # router = APIRouter(
@@ -79,6 +82,8 @@ async def Home():
 
 # Подключаем остальные обработчики запросов (из routes.py)
 app.include_router(router)
+app.include_router(router_static_analysis)
+app.include_router(router_accounts)
 
 # Запуск командой python main.py
 if __name__ == '__main__':
