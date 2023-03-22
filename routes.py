@@ -19,7 +19,6 @@ def get_db():
 
 # @router.get("/")
 # async def get_by_id2():
-#     print("hello router 1")
 #     # _book = crud.get_book_by_id(db, id)
 #     # return Response(code=200, status="Ok", message="Success get data", result=_book).dict(exclude_none=True)
 #     return "Congratulations!"
@@ -48,7 +47,7 @@ async def update_book(request: RequestBook, db:Session = Depends(get_db)):
   return Response(code=200, status="Ok", message="Success update data", result=_book)
 
 @router.delete("/{id}")
-async def delete(id:int, db:Session = Depends(get_db)):
+def delete(id:int, db:Session = Depends(get_db)):
   crud.remove_book(db, book_id=id)
   return Response(code=200, status="Ok", message="Success delete data").dict(exclude_none=True)
 

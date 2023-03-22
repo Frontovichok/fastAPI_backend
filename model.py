@@ -6,16 +6,14 @@ from sqlalchemy.orm import relationship
 from config import Base
 from sqlalchemy.dialects.postgresql import JSONB
 
-class Book(Base):
-    __tablename__ = 'book'
 
-    # к типу Integer автоматически добавляется свойство autoincrement=True
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String)
-    description = Column(String)
+# class Book(Base):
+#     __tablename__ = 'book'
 
-
-
+#     # к типу Integer автоматически добавляется свойство autoincrement=True
+#     id = Column(Integer, primary_key=True, index=True)
+#     title = Column(String)
+#     description = Column(String)
 
 
 # Одна таблица с проектами и компонентами,
@@ -24,32 +22,35 @@ class Book(Base):
 # необходимо создать связь многие ко многим, чтобы у каждого аккаунта был список проектов, которые к нему привязаны:
 # https://www.digitalocean.com/community/tutorials/how-to-use-one-to-many-database-relationships-with-flask-sqlalchemy
 # https://www.gormanalysis.com/blog/many-to-many-relationships-in-fastapi/
-class Projects(Base):
-    __tablename__ = 'projects'
+# class Projects(Base):
+#     __tablename__ = 'projects'
 
-    id = Column(Integer, primary_key=True, index=True)
-    account_id = Column(Integer, primary_key=True, index=True)
-    # authors = relationship("Account", secondary="")
-    name = Column(String)
-    company = Column(String)
-    sertification_type = Column(String)
-    trust_level = Column(String)
-    number = Column(String)
-    # Привязать к аккаунтам, экспертов может быть несколько
-    experts = Column(ARRAY(Integer))
-    solution = Column(Integer)
-    source_directory = Column(String)
-    distrib_directory = Column(String)
-    documentation_directory = Column(String)
-    status = Column(String)
-    reports_directory = Column(String)
-    # создать связь с работой(полями этой же таблицы), подпроектом которого является данный компонент
-    main_component = Column(String)
-    # создать связь с компонентами(полями этой же таблицы), которые входят в данную работу
-    subcomponents = Column(ARRAY(String))
+#     id = Column(Integer, primary_key=True, index=True, unique=True)
+#     account_id = Column(Integer, primary_key=True, index=True)
+#     # authors = relationship("Account", secondary="")
+#     name = Column(String)
+#     company = Column(String)
+#     sertification_type = Column(String)
+#     trust_level = Column(String)
+#     number = Column(String)
+#     # Привязать к аккаунтам, экспертов может быть несколько
+#     experts = Column(ARRAY(Integer))
+#     solution = Column(Integer)
+#     source_directory = Column(String)
+#     distrib_directory = Column(String)
+#     documentation_directory = Column(String)
+#     status = Column(String)
+#     reports_directory = Column(String)
+#     # создать связь с работой(полями этой же таблицы), подпроектом которого является данный компонент
+#     main_component = Column(String)
+#     # создать связь с компонентами(полями этой же таблицы), которые входят в данную работу
+#     subcomponents = Column(ARRAY(String))
 
-    static_analysis = relationship(
-        'Static_analysis', backref='projects')
+#     # static_analysis = relationship(
+#     #     'Static_analysis', backref='projects')
+#     projects = relationship('Static_analysis', backref='projects')
+
+# в чем разница между back_populates и backref
 
 # подумать нужна ли эта таблица, которая будет аккумулировать данные из других таблиц, которые содержат данные из программной документации
 
@@ -189,6 +190,7 @@ class Checksum(Base):
     checksum_alghoritm = Column(String)
 
 # ----------------------------------------------------------------------Dynamic analysis---------------------------------------------------------
+
 
 class Dynamic_analysis(Base):
     __tablename__ = 'dynamec_analysis'

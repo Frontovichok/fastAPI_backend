@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, ARRAY, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from config import Base
 
+
 class Account(Base):
     __tablename__ = 'accounts'
 
@@ -17,8 +18,8 @@ class Account(Base):
     email = Column(String)
     status = Column(String)
     access_level = Column(String)
-    working_from = Column(DateTime)
+    working_from = Column(String)
 
     # Нужно для будущей авторизации
     login = Column(String, unique=True, nullable=False)
-    password_hash = Column(String, unique=True, nullable=False)
+    password_hash = Column(String, nullable=False)

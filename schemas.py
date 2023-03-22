@@ -44,8 +44,37 @@ class AccountSchema(BaseModel):
         orm_mode = True
 
 
-class RequestAccounts(BaseModel):
+class RequestAccount(BaseModel):
     parameter: AccountSchema = Field(...)
+
+
+class ProjectSchema(BaseModel):
+    id: int
+    account_id: Optional[int] = None
+    # authors = relationship("Account", secondary="")
+    name: Optional[str] = None
+    company: Optional[str] = None
+    sertification_type: Optional[str] = None
+    trust_level: Optional[str] = None
+    number: Optional[str] = None
+    # Привязать к аккаунтам, экспертов может быть несколько
+    experts: Optional[str] = None
+    solution: Optional[str] = None
+    source_directory: Optional[str] = None
+    distrib_directory: Optional[str] = None
+    documentation_directory: Optional[str] = None
+    status: Optional[str] = None
+    reports_directory: Optional[str] = None
+    # создать связь с работой(полями этой же таблицы), подпроектом которого является данный компонент
+    main_component: Optional[str] = None
+    # создать связь с компонентами(полями этой же таблицы), которые входят в данную работу
+    subcomponents: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
+class RequestProject(BaseModel):
+    parameter: ProjectSchema = Field(...)
 
 
 class StaticAnalysisStatusesSchema(BaseModel):
@@ -82,12 +111,12 @@ class Response(GenericModel, Generic[T]):
     result: Optional[T]
 
 
-class AddToBinarySearchHisotorySchema(BaseModel):
+class BinarySearchHisotorySchema(BaseModel):
     # id: Optional[int]=None
     # title: Optional[str]=None
     # description: Optional[str]=None
 
-    id: Optional[int] = None
+    id: Optional[int]
     # связать с проектом
     project_id: Optional[int] = None
     path_to_source_directory: Optional[str] = None
@@ -99,5 +128,5 @@ class AddToBinarySearchHisotorySchema(BaseModel):
         orm_mode = True
 
 
-class RequestAddToBinarySearchHistory(BaseModel):
-    parameter: AddToBinarySearchHisotorySchema = Field(...)
+class RequestBinarySearchHisotory(BaseModel):
+    parameter: BinarySearchHisotorySchema = Field(...)
