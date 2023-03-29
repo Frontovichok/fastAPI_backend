@@ -43,25 +43,58 @@ def remove_statuses_by_project_id(db: Session, project_id: int):
         raise HTTPException(
             status_code=int(HTTPStatus.NOT_FOUND), detail=f"No data with this project_id"
         )
-    print(_statuses)
     db.delete(_statuses)
     db.commit()
 
+
+# обновляются все столбцы кроме id(чтобы не перезаписать другую запись) и project_id(если изменить, то потеряется ссылка на данный project_id в таблице Binary_search_history)
+def update_statuses_by_id(db: Session, static_analysis_statuses: StaticAnalysisStatusesSchema, id: int):
+    new_statuses = Static_analysis(build_status=static_analysis_statuses.build_status,
+                                   binaries_status=static_analysis_statuses.binaries_status, extra_files_status=static_analysis_statuses.extra_files_status,
+                                   extra_functions_status=static_analysis_statuses.extra_functions_status,
+                                   vulnerabilities_status=static_analysis_statuses.vulnerabilities_status,
+                                   programming_languages=static_analysis_statuses.programming_languages)
+
+    current_statuses = db.query(Static_analysis).get(id)
+
+    current_statuses.build_status = new_statuses.build_status
+    current_statuses.binaries_status = new_statuses.binaries_status
+    current_statuses.extra_functions_status = new_statuses.extra_functions_status
+    current_statuses.vulnerabilities_status = new_statuses.vulnerabilities_status
+    current_statuses.programming_languages = new_statuses.programming_languages
+
+    db.commit()
+    return current_statuses
 
 # ------------------------------------------------------------
 
 
 def get_binary_search_history(db: Session, skip: int = 0, limit: int = 100):
-    print("get_binary_search_history 1")
     _binary_search_history = db.query(
         Binary_search_history).offset(skip).limit(limit).all()
-    print("get_binary_search_history 2 ", _binary_search_history)
     if not _binary_search_history:
-        print("get_binary_search_history 3")
         raise HTTPException(
             status_code=int(HTTPStatus.NOT_FOUND), detail=f"Binary search history is not exist"
         )
     return _binary_search_history
+
+
+# обновляются все столбцы кроме id(чтобы не перезаписать другую запись) и project_id(если изменить, то потеряется ссылка на данный project_id в таблице Binary_search_history)
+def update_binary_search_history_by_id(db: Session, update_binary_search_history: BinarySearchHisotorySchema, id: int):
+    new_binary_search_history = Binary_search_history(path_to_source_directory=update_binary_search_history.path_to_source_directory,
+                                                      status=update_binary_search_history.status,
+                                                      time=update_binary_search_history.time,
+                                                      result=update_binary_search_history.result)
+
+    current_binary_search_history = db.query(Binary_search_history).get(id)
+
+    current_binary_search_history.path_to_source_directory = new_binary_search_history.path_to_source_directory
+    current_binary_search_history.status = new_binary_search_history.status
+    current_binary_search_history.time = new_binary_search_history.time
+    current_binary_search_history.result = new_binary_search_history.result
+
+    db.commit()
+    return current_binary_search_history
 
 
 def add_to_binary_search_history(db: Session, add_to_binary_search: BinarySearchHisotorySchema):

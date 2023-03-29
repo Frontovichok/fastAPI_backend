@@ -35,3 +35,9 @@ async def get_account_by_login(account_login: str, db: Session = Depends(get_db)
     _account = crud_accounts.get_account_by_login(
         db, account_login)
     return Response(code=200, status="ok", message="Success get data by project_id", result=_account).dict(exclude_none=True)
+
+
+@router_accounts.delete("/remove_account_by_login")
+async def remove_account_by_login(login: str, db: Session = Depends(get_db)):
+    crud_accounts.remove_account_by_login(db, login)
+    return Response(code=200, status="Ok", message=f"Account with login: {login} successfuly deleted")

@@ -44,3 +44,13 @@ def get_account_by_login(db: Session, login: str):
             status_code=int(HTTPStatus.NOT_FOUND), detail=f"No static analysis information exist with project_id = {_account}"
         )
     return _account
+
+
+def remove_account_by_login(db: Session, login: int):
+    account = get_account_by_login(db=db, login=login)
+    if not account:
+        raise HTTPException(
+            status_code=int(HTTPStatus.NOT_FOUND), detail=f"No account with this login"
+        )
+    db.delete(account)
+    db.commit()

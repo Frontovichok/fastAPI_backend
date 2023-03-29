@@ -33,6 +33,7 @@ async def get(db: Session = Depends(get_db)):
 
 @router_static_analysis.get("/{project_id}")
 async def get_by_project_id(project_id: int, db: Session = Depends(get_db)):
+    print("--------------------------------------project_id is: ", project_id)
     _statuses = crud_static_analysis.get_statuses_by_project_id(
         db, project_id)
     return Response(code=200, status="ok", message="Success get data by project_id", result=_statuses).dict(exclude_none=True)
@@ -45,11 +46,12 @@ async def remove_statuses_by_project_id(project_id: int, db: Session = Depends(g
 
 
 @router_static_analysis.put("/{id}")
-async def update_by_project_id(request: RequestStaticAnalysisStatuses, db: Session = Depends(get_db)):
+async def update_by_project_id(id: int, request: RequestStaticAnalysisStatuses, db: Session = Depends(get_db)):
+    print("--------------------------------------id is: ", id)
     _statuses = crud_static_analysis.update_statuses_by_id(
-        db, request.parameter)
+        db, request.parameter, id)
 
-    return Response(code=200, status="Ok", message=f"Statuses updated successfuly")
+    return Response(code=200, status="Ok", message=f"Statuses updated successfully")
 
 # ----------------------------------------------------------------------------------------
 
@@ -65,3 +67,11 @@ async def get_binary_search_history(db: Session = Depends(get_db)):
 async def add_to_binary_search_history(request: RequestBinarySearchHisotory, db: Session = Depends(get_db)):
     crud_static_analysis.add_to_binary_search_history(db, request.parameter)
     return Response(code=200, status="Ok", message="Information about binary search added to history successfully").dict(exclude_none=True)
+
+
+@router_static_analysis.put("/update_binary_search_history/{id}")
+async def update_binary_search_history_by_id(id: int, request: RequestBinarySearchHisotory, db: Session = Depends(get_db)):
+    _binary_search_history = crud_static_analysis.update_binary_search_history_by_id(
+        db, request.parameter, id)
+
+    return Response(code=200, status="Ok", message=f"Binary search history updated successfully")

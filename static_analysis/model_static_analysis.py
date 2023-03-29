@@ -27,6 +27,15 @@ class Static_analysis(Base):
 
     # projects = relationship('Projects', back_populates='static_analysis')
 
+    # static_analysis = relationship(
+    #     "Binary_search_history", backref="static_analysis", cascade='all, delete-orphan', passive_deletes=True, passive_updates=True)
+
+    # static_analysis = relationship(
+    #     "Projects", back_populates="static_analysis", cascade='all, merge, delete')
+
+    # static_analysis = relationship(
+    #     "Binary_search_history", back_populates="static_analysis", cascade='all, merge, delete')
+
 
 class Binary_search_history(Base):
     __tablename__ = 'binary_search_history'
@@ -34,7 +43,7 @@ class Binary_search_history(Base):
     id = Column(Integer, primary_key=True, index=True)
     # связать с проектом
     project_id = Column(Integer, ForeignKey(
-        'static_analysis.project_id'))
+        'static_analysis.project_id', ondelete="CASCADE"))
 
     # project_id = Column(Integer)
 
@@ -43,8 +52,11 @@ class Binary_search_history(Base):
     time = Column(DateTime)
     # результат анализа - JSON файл со списком бинраных файлов с указанием их местонахождения
     result = Column(String)
+    # static_analysis = relationship(
+    #     "Static_analysis", back_populates="binary_search_history")
+
     static_analysis = relationship(
-        "Static_analysis", backref="binary_search_history")
+        "Static_analysis", backref="static_analysis", cascade='all, delete', passive_deletes=True, passive_updates=True)
 
 
 class Extra_files_search_history(Base):

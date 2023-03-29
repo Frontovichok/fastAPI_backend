@@ -45,3 +45,13 @@ def get_project_by_id(db: Session, id: int):
             status_code=int(HTTPStatus.NOT_FOUND), detail=f"No static analysis information exist with id = {id}"
         )
     return _project
+
+
+def remove_project_by_id(db: Session, id: int):
+    project = get_project_by_id(db=db, id=id)
+    if not project:
+        raise HTTPException(
+            status_code=int(HTTPStatus.NOT_FOUND), detail=f"No project with this id"
+        )
+    db.delete(project)
+    db.commit()
