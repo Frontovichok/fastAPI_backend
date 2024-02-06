@@ -1,64 +1,74 @@
-from fastapi import FastAPI, APIRouter, Depends
-from fastapi.middleware.cors import CORSMiddleware
-import model
-from config import engine
-# from routes import router
-from static_analysis.routes_static_analysis import router_static_analysis
-from accounts.routes_accounts import router_accounts
-from projects.routes_projects import router_projects
-# from routes_static_analysis import router_static_analysis
+from datetime import datetime
+from enum import Enum
+from typing import List, Optional, Union
+from typing_extensions import Annotated
+
+from fastapi_users import fastapi_users, FastAPIUsers
+from pydantic import BaseModel, Field
+
+from fastapi import FastAPI, Request, status, Depends
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import ValidationError
+from fastapi.responses import JSONResponse
+
+# from auth.auth import auth_backend
+from auth.database import User
+from auth.manager import get_user_manager
+# from auth.schemas import UserRead, UserCreate
+
+from auth.auth import auth_backend
+from auth.schemas import UserRead, UserCreate
+
 import uvicorn
 
-# router = APIRouter(
-#     prefix="/products",
-#     tags=["Product"]
-# )
-
-
-# Создает модели(таблицы) в БД
-model.Base.metadata.create_all(bind=engine)
-
-# Создание экземпляра класса FastAPI
-app = FastAPI()
-
-# Фунция, которая работает с каждым запросом перед обработкой этого запроса соответствующей функцией (напр. @app.get('/'))
-app.add_middleware(
-    CORSMiddleware,
-    # Cross-Origin Resource Sharing (CORS) - разрешаем все внешние подключения
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+app = FastAPI(
+    title="Trading App"
 )
 
+fastapi_users = FastAPIUsers[User, int](
+    get_user_manager,
+    [auth_backend],
+)
 
-@app.get('/')
-async def Home():
-    return "Welcome Home"
+# Роутер для (/auth/jwt/login и /auth/jwt/logout)
+app.include_router(
+    fastapi_users.get_auth_router(auth_backend),
+    prefix="/auth/jwt",
+    tags=["auth"],
+)
+
+# Роутер для регистрации (/auth/register)
+app.include_router(
+    fastapi_users.get_register_router(UserRead, UserCreate),
+    prefix="/auth",
+    tags=["auth"],
+)
+
+# Роутер для верификации (/auth/verify и /auth/request-verify-token)
+app.include_router(
+    fastapi_users.get_verify_router(UserRead),
+    prefix="/auth",
+    tags=["auth"],
+)
+
+# Роутер для сброса и восстановления пароля (/auth/forgot-password и /auth/reset-password)
+app.include_router(
+    fastapi_users.get_reset_password_router(),
+    prefix="/auth",
+    tags=["auth"],
+)
+
+current_user = fastapi_users.current_user()
+
+@app.get("/protected-route")
+def protected_route(user: User = Depends(current_user)):
+    return f"Hello, {user.username}"
 
 
-# async def root():
-#     return {"message": "Hello World"}
-
-# if __name__ == "__main__":
-#     uvicorn.run("server:app", host="localhost", port=8000, reload=True)
-
-
-# @router.get("/")
-# async def get_by_id2():
-#     # _book = crud.get_book_by_id(db, id)
-#     # return Response(code=200, status="Ok", message="Success get data", result=_book).dict(exclude_none=True)
-#     return "Congratulations!"
-
-# app.include_router(router, prefix="/book", tags=["book"])
-
-# Подключаем остальные обработчики запросов (из routes.py)
-# app.include_router(router)
-app.include_router(router_static_analysis)
-app.include_router(router_accounts)
-app.include_router(router_projects)
+@app.get("/unprotected-route")
+def unprotected_route():
+    return f"Hello, anonym"
 
 # Запуск командой python main.py
-if __name__ == '__main__':
-    uvicorn.run("main:app", host='127.0.0.1', port=8000,
-                log_level="info", reload=True)
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, log_level="info", reload=True)
