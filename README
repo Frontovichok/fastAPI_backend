@@ -1,5 +1,11 @@
 in the folder what does exist venv: pip install -r requirements.txt
 
+prepare db in pgadmin:
+  create db with name postgres2
+  create roles in table role:
+    -- select * from role;
+    -- insert into role values (1, 'user', null), (2, 'admin', null);
+
 to run server: python main.py
 
 alembic commands:

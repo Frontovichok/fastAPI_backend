@@ -25,7 +25,7 @@ from auth.manager import get_user_manager
 # from auth.schemas import UserRead, UserCreate
 
 from auth.auth import auth_backend
-from auth.schemas import UserRead, UserCreate
+from auth.schemas import UserRead, UserCreate, UserUpdate
 
 import uvicorn
 
@@ -69,6 +69,12 @@ app.include_router(
     tags=["auth"],
 )
 
+app.include_router(
+    fastapi_users.get_users_router(UserRead, UserUpdate),
+    prefix="/users",
+    tags=["users"],
+)
+
 # Роутер для верификации (/auth/verify и /auth/request-verify-token)
 # app.include_router(
 #     fastapi_users.get_verify_router(UserRead),
@@ -83,12 +89,13 @@ app.include_router(
 #     tags=["auth"],
 # )
 
+
 current_user = fastapi_users.current_user()
 
 
 @app.get("/current_user")
 def protected_route(user: User = Depends(current_user)):
-    return f"Hello current_user, {user.username}, ' email: ', {user.email}"
+    return f"Hello current_user, username: {user.username}, ' email: ', {user.email}, registered_at: {user.registered_at}, first_name: {user.first_name}"
 
 current_active_user = fastapi_users.current_user(active=True)
 

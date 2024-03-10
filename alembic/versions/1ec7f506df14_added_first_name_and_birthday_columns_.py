@@ -1,8 +1,8 @@
-"""Initial
+"""added first_name and birthday columns to user
 
-Revision ID: 8e80f098768f
+Revision ID: 1ec7f506df14
 Revises: 
-Create Date: 2024-02-06 20:37:48.462631
+Create Date: 2024-03-08 14:01:56.400146
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '8e80f098768f'
+revision: str = '1ec7f506df14'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -31,6 +31,8 @@ def upgrade() -> None:
     sa.Column('email', sa.String(), nullable=False),
     sa.Column('username', sa.String(), nullable=False),
     sa.Column('registered_at', sa.TIMESTAMP(), nullable=True),
+    sa.Column('first_name', sa.String(), nullable=True),
+    sa.Column('birthdate', sa.String(), nullable=True),
     sa.Column('role_id', sa.Integer(), nullable=True),
     sa.Column('hashed_password', sa.String(), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False),
