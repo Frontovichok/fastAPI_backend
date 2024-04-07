@@ -28,6 +28,12 @@ from auth.auth import auth_backend
 from auth.schemas import UserRead, UserCreate, UserUpdate
 
 import uvicorn
+import time
+import asyncio
+from fastapi import FastAPI, UploadFile, File
+from fastapi.responses import FileResponse
+import os
+from pathlib import Path
 
 app = FastAPI(title="Trading App")
 
@@ -97,11 +103,64 @@ current_user = fastapi_users.current_user()
 def protected_route(user: User = Depends(current_user)):
     return f"Hello current_user, username: {user.username}, ' email: ', {user.email}, registered_at: {user.registered_at}, first_name: {user.first_name}"
 
+
 current_active_user = fastapi_users.current_user(active=True)
+
 
 @app.get("/current_active_user")
 def protected_route(user: User = Depends(current_active_user)):
     return f"Hello active current_user, {user.username}, ' email: ', {user.email}"
+
+
+async def my_func_2():
+    print("Func2 started..!!")
+    await asyncio.sleep(6)
+    print("Func2 ended..!!")
+
+    return "b..!!"
+
+
+@app.get("/imitation")
+async def imitation():
+    start = time.time()
+    futures = [my_func_2()]
+    b = await asyncio.gather(*futures)
+    end = time.time()
+    print("It took {} seconds to finish execution.".format(round(end - start)))
+    return "Hello!"
+
+
+tmp_file_dir = "/tmp/example-files"
+Path(tmp_file_dir).mkdir(parents=True, exist_ok=True)
+
+
+@app.post("/file/upload_understand_new_file")
+async def upload_file(file: UploadFile):
+    # file.file.read().decode("utf8")
+    with open(os.path.join(tmp_file_dir, file.filename), "wb") as disk_file:
+        file_bytes = await file.read()
+        disk_file.write(file_bytes)
+        print(
+            f"Received file named {file.filename} containing {len(file_bytes)} bytes. "
+        )
+        return FileResponse(
+            disk_file.name, filename=file.filename, media_type=file.content_type
+        )
+
+
+@app.post("/file/upload_understand_old_file")
+async def upload_file(file: UploadFile):
+    # file.file.read().decode("utf8")
+    with open(os.path.join(tmp_file_dir, file.filename), "wb") as disk_file:
+        file_bytes = await file.read()
+        disk_file.write(file_bytes)
+        print(
+            f"Received file named {file.filename} containing {len(file_bytes)} bytes. "
+        )
+        return FileResponse(
+            disk_file.name, filename=file.filename, media_type=file.content_type
+        )
+
 
 app.mount(
     "/static",
