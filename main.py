@@ -27,8 +27,12 @@ from auth.manager import get_user_manager
 from auth.auth import auth_backend
 from auth.schemas import UserRead, UserCreate, UserUpdate
 
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
+
 import uvicorn
 import time
+from datetime import date
 import asyncio
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import FileResponse
@@ -128,6 +132,104 @@ async def imitation():
     end = time.time()
     print("It took {} seconds to finish execution.".format(round(end - start)))
     return "Hello!"
+
+
+@app.get("/checksums")
+async def ckecksums():
+    res = {
+        "  *include\\ASF\\asf.h": "58cd3549e8a3f66410566c7f8c2738bd",
+        " + *include\\ASF\\common\\services\\sleepmgr\\sleepmgr.h": "6a80cf5cdd180fbb5c712fbd3a0c7485",
+        " + *include\\ASF\\common\\services\\sleepmgr\\samd\\conf_sleepmgr.h": "1f2376a8979ba50f4bdd16e966d39e86",
+        " + *include\\ASF\\common\\services\\sleepmgr\\samd\\sleepmgr.h": "67024e2cb5ebb901ca7f9c117f1894d3",
+        " + *include\\ASF\\common\\utils\\interrupt.h": "85f14bffc877ab0a071bae0f77cdce0f",
+        " + *include\\ASF\\common\\utils\\parts.h": "61e25548b4ffff778601468e1b5073fd",
+        " + *include\\ASF\\common\\utils\\interrupt\\interrupt_sam_nvic.h": "52fafee543eb6d9fed17075b266764c5",
+        "  *include\\ASF\\sam0\\drivers\\ac\\_ac.h": "d9706a964da14b03e03e372ce096273c",
+        "  *include\\ASF\\sam0\\drivers\\adc\\adc_feature.h": "6a5cfc19c74d799be204da11f6678c47",
+        "  *include\\ASF\\sam0\\drivers\\adc\\_adc.h": "69f05f2 a6b178076c41c270efc4eea88",
+        "  *include\\ASF\\sam0\\drivers\\dac\\dac_feature.h": "8023c3febe6efcf446d880600145576e",
+        "  *include\\ASF\\sam0\\drivers\\dac\\_dac.h": "36fd69681e07c51290987fc709a6a3ac",
+        "  *include\\ASF\\sam0\\drivers\\extint\\extint.h": "5c9719eb6651c1458b556c02511fa8e2",
+        "  *include\\ASF\\sam0\\drivers\\extint\\extint_callback.h": "8a56239cd7f2b9ab6a281deba95c591a",
+        "  *include\\ASF\\sam0\\drivers\\extint\\module_config\\conf_extint.h": "5777f4c07e5ece07153d17b3b7bb8ca3",
+        "  *include\\ASF\\sam0\\drivers\\nvm\\nvm.h": "fc545e3fbe08ca6268abe5cacd269856",
+        "  *include\\ASF\\sam0\\drivers\\port\\port.h": "0f97fe3d0d009965fc920da8114f1563",
+        "  *include\\ASF\\sam0\\drivers\\port\\quick_start\\qs_port_basic.h": "46e2430194ab38b2b94821f497a9281e",
+        "  *include\\ASF\\sam0\\drivers\\rtc\\rtc_calendar.h": "527dc6c3ff018b294b130d9f77fc179b",
+        "  *include\\ASF\\sam0\\drivers\\sercom\\sercom_interrupt.h": "397bf09c8f15a766aac953d3055a5b72",
+        "  *include\\ASF\\sam0\\drivers\\sercom\\sercom_pinout.h": "d9e96f774909c0f15cf8a51aa17aeed6",
+        "  *include\\ASF\\sam0\\drivers\\sercom\\_sercom.h": "f5c35017ebc5a027d8a32c5b8e083e06",
+        " - *include\\ASF\\sam0\\drivers\\sercom\\spi\\conf_spi.h": "150791721c2b6de2055513f7ef0d1576",
+        " + *include\\ASF\\sam0\\drivers\\sercom\\spi\\conf_spi.h": "0dd23a55b861080f4a8302c3350146d9",
+        "  *include\\ASF\\sam0\\drivers\\sercom\\spi\\_spi.h": "0d85c8c0fd5b5e0c0a1785802ee874b0",
+        "  *include\\ASF\\sam0\\drivers\\sercom\\usart\\usart.h": "d4a5930515cba8ab183989992603ec30",
+        "  *include\\ASF\\sam0\\drivers\\sercom\\usart\\usart_interrupt.h": "3baa948b38381dd375264ce80247050d",
+        "  *include\\ASF\\sam0\\drivers\\system\\system.h": "b74e93148feae13f35da35b18b8e1592",
+        "  *include\\ASF\\sam0\\drivers\\system\\clock\\reset.h": "d363540aaab95f47b01c839019f41c21",
+        "  *include\\ASF\\sam0\\drivers\\system\\clock\\_clock.h": "75a695637851f4c57ef71ea5a9ef714e",
+        "  *include\\ASF\\sam0\\drivers\\system\\clock\\_gclk.h": "4f7f07bc87fe38b2707eaae04379c132",
+        "  *include\\ASF\\sam0\\drivers\\system\\clock\\clock_samd20\\clock_config_check.h": "bf7459cfa3feaf1bb2481bc5b0e8d695",
+        "  *include\\ASF\\sam0\\drivers\\system\\clock\\clock_samd20\\clock_feature.h": "289536d5f566c199a97c719e1592645f",
+        "  *include\\ASF\\sam0\\drivers\\system\\clock\\clock_samd20\\conf_clocks.h": "1463d6266d70107ab91220adc1e64d5c",
+        "  *include\\ASF\\sam0\\drivers\\system\\interrupt\\system_interrupt.h": "37fdf7f888c4a8c67f4fc609a60fb550",
+        "  *include\\ASF\\sam0\\drivers\\system\\interrupt\\system_interrupt_samd20\\system_interrupt_features.h": "62226eedb5886f14bc12811acec669f1",
+        "  *include\\ASF\\sam0\\drivers\\system\\pinmux\\pinmux.h": "84dafeeb31d98fdfcc2408e51c7ebc85",
+        "  *include\\ASF\\sam0\\drivers\\system\\power\\power_sam_d_r_h\\power.h": "a931e0ad657117514a152a0540462780",
+        "  *include\\ASF\\sam0\\drivers\\system\\reset\\reset_sam_d_r_h\\reset.h": "d363540aaab95f47b01c839019f41c21",
+        "  *include\\ASF\\sam0\\drivers\\tc\\conf_qs_tc_timer.h": "01a0a15e788bb369e1ba4bf86f53b28f",
+        "  *include\\ASF\\sam0\\drivers\\tc\\tc_interrupt.h": "4d8f1e7a2b78a33e1c2141523f46197b",
+        "  *include\\ASF\\sam0\\drivers\\tc\\_tc.h": "f00f28e2d105813047133195c6b2605b",
+        "  *include\\ASF\\sam0\\drivers\\wdt\\_wdt.h": "84b7d20c4e4167dac79abbb53d83fc05",
+        "  *include\\ASF\\sam0\\utils\\compiler.h": "98be6882a2479b7a009d1d7142514500",
+    }
+    return res
+
+
+@app.get("/compare_unused_functions")
+async def compare_unused_functions():
+    res = {
+        "new_files": {
+            "\\source\\test.c": ["checker                                 12"],
+            "\\source\\system\\system_functions.c": [
+                "__attribute__                          389",
+                "__attribute__                          403",
+            ],
+        },
+        "deleted_files": {
+            "\\source\\device\\startup_samd20.c": [
+                "Dummy_Handler                          235"
+            ],
+            "\\source\\system\\volume_control.c": [
+                "__attribute__                           68"
+            ],
+            "\\source\\gui\\flash_fs.cpp": [
+                "CFlashFile::CFlashFile                 596",
+                "CFlashStreamFile::CFlashStreamFile     877",
+            ],
+        },
+        "same_files": {
+            "\\include\\ASF\\thirdparty\\CMSIS\\Include\\cmsis_gcc.h": [
+                "packed                                  74",
+                "T_UINT16_READ                           90",
+                "T_UINT16_WRITE                          82",
+            ]
+        },
+        "modified_functions": {
+            " + \\source\\asf\\system.c": [
+                "_system_dummy_init                      45",
+                "Комсомольск                             24",
+            ],
+            " - \\source\\system\\battery.c": [
+                "__attribute__                           26",
+                "T_UINT16_READ                           93",
+            ],
+            " + \\source\\system\\battery.c": [
+                "spi_transceive_buffer_wait            1014",
+                "что-то ещё                         1231124",
+            ],
+        },
+    }
+    return res
 
 
 tmp_file_dir = "/tmp/example-files"
