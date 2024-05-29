@@ -232,6 +232,69 @@ async def compare_unused_functions():
     return res
 
 
+@app.get("/analyze_sources")
+async def analyse_sources():
+    res = {
+        "python": 172,
+        "javascript": 41,
+        "java": 0,
+        ".h files": 188,
+        "c": 51,
+        "c++": 116,
+        "c#": 0,
+        "php": 0,
+        "swift": 0,
+        "typescript": 0,
+        "ruby": 0,
+        "go": 0,
+        "rust": 0,
+        "kotlin": 0,
+        "perl": 0,
+        "scala": 0,
+        "objective-c": 0,
+        "shell": 0,
+        "sql": 0,
+        "html": 17,
+        "css": 4,
+        "assembler": 2,
+        "binary_files": {
+            "windows_files": [
+                "\\2.1\\Web\\htps\\Denwer3_Base_2013-06-02_a2.2.22_p5.3.13_m5.5.25_pma3.5.1_xdebug.exe",
+                "\\2.1\\Ооп\\Alexseev_PW_8_7.exe",
+                "\\2.1\\Ооп\\Alexseev_PW_8_8.exe",
+                "\\2.1\\Ооп\\Alexseev_PW_8_9.exe",
+                "\\2.1\\Ооп\\Alexseev_PZ_7.exe",
+                "\\2.1\\Ооп\\Alexseev_PZ_8_10-.exe",
+                "\\2.1\\Ооп\\ClassStruct\\Debug\\ClassStruct.exe",
+                "\\2.1\\Ооп\\ConsoleApplication1\\Debug\\ConsoleApplication1.exe",
+                "\\2.1\\Ооп\\FinalStruct\\Debug\\FinalStruct.exe",
+                "\\2.1\\Ооп\\Project4\\Debug\\Project4.exe",
+                "\\2.1\\Ооп\\Project5\\Debug\\Project5.exe",
+                "\\2.1\\Ооп\\Project5\\Release\\Project5.exe",
+                "\\2.1\\Ооп\\PW8R\\Debug\\PW8R.exe",
+                "\\2.1\\Ооп\\PW8R\\Release\\PW8R.exe",
+            ],
+            "linux_files": [],
+            "empty_files": [
+                "\\2.1\\Английский\\фвыавп.txt",
+                "\\2.1\\Ооп\\Алексеев\\file5out.txt",
+                "\\2.1\\Программирование\\Python\\PlayGround.py",
+                "\\2.1\\Программирование\\Stepik\\testzone.py",
+                "\\2.1\\Социология\\Ответы на вопросы.docx",
+                "\\2.1\\Философия\\Проект Интернет\\Выступление.pptx",
+                "\\include\\ASF\\thirdparty\\CMSIS\\Training_The_Demon-0.1.0-win\\lib\\python3.9\\future\\backports\\test\\nullcert.pem.pyc",
+                "\\include\\ASF\\thirdparty\\P4G Mods\\.Reloaded II\\portable.txt",
+                "\\include\\ASF\\thirdparty\\P4G Mods\\.Reloaded II\\Mods\\p4gpc.communityenhancementpack12\\FEmulator\\PAK\\facility\\book.arc\\book.bf",
+                "\\include\\ASF\\thirdparty\\P4G Mods\\.Reloaded II\\Mods\\p4gpc.communityenhancementpack12\\FEmulator\\PAK\\field\\pack\\fd006_001.arc\\n006_001.bf",
+                "\\include\\ASF\\thirdparty\\P4G Mods\\.Reloaded II\\Mods\\p4gpc.communityenhancementpack12\\FEmulator\\PAK\\field\\pack\\fd006_003.arc\\n006_003.bf",
+                "\\include\\ASF\\thirdparty\\P4G Mods\\.Reloaded II\\Mods\\p4gpc.communityenhancementpack12\\FEmulator\\PAK\\field\\pack\\fd007_001.arc\\n007_001.bf",
+                "\\include\\ASF\\thirdparty\\P4G Mods\\.Reloaded II\\Mods\\p4gpc.communityenhancementpack12\\FEmulator\\PAK\\field\\pack\\fd009_004.arc\\n009_004.bf",
+            ],
+        },
+    }
+    return res
+
+
 tmp_file_dir = "/tmp/example-files"
 Path(tmp_file_dir).mkdir(parents=True, exist_ok=True)
 
@@ -264,17 +327,15 @@ async def upload_file(file: UploadFile):
         )
 
 
+root_client_dir = "C:\\Users\\user\\fastAPI_client\\build"
+
 app.mount(
     "/static",
-    StaticFiles(
-        directory="C:\\Users\\mag\\Documents\\fastAPI_app\\fastAPI_client\\build\\static"
-    ),
+    StaticFiles(directory=root_client_dir + "\\static"),
     name="static",
 )
 
-templates = Jinja2Templates(
-    directory="C:\\Users\\mag\\Documents\\fastAPI_app\\fastAPI_client\\build"
-)
+templates = Jinja2Templates(directory=root_client_dir)
 
 
 @app.get("/{full_path:path}")
